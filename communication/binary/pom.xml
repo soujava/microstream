@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>one.microstream</groupId>
 			<artifactId>microstream-afs-nio</artifactId>
-			<version>04.02.00-MS-GA-SNAPSHOT</version>
+			<version>07.00.00-MS-GA-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

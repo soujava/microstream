@@ -1,6 +1,26 @@
 
 package one.microstream.configuration.types;
 
+/*-
+ * #%L
+ * microstream-configuration
+ * %%
+ * Copyright (C) 2019 - 2021 MicroStream Software
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
 import static one.microstream.X.notNull;
 
 import java.io.File;
@@ -15,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import one.microstream.chars.XChars;
+import one.microstream.configuration.exceptions.ConfigurationException;
 import one.microstream.configuration.exceptions.ConfigurationExceptionNoConfigurationFound;
 import one.microstream.exceptions.IORuntimeException;
 
@@ -38,7 +59,7 @@ public interface ConfigurationLoader
 	 * Loads the configuration from the given resource.
 	 * 
 	 * @return the configuration resource's content.
-	 * @throws StorageConfigurationException if an error occurs while loading the resource
+	 * @throws ConfigurationException if an error occurs while loading the resource
 	 */
 	public String loadConfiguration();
 	
@@ -118,7 +139,7 @@ public interface ConfigurationLoader
 	 * 
 	 * @param path file system path
 	 * @return the configuration
-	 * @throws StorageConfigurationException if the configuration couldn't be loaded
+	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
 	public static ConfigurationLoader New(
 		final Path path
@@ -137,7 +158,7 @@ public interface ConfigurationLoader
 	 * @param path file system path
 	 * @param charset the charset used to load the configuration
 	 * @return the configuration
-	 * @throws StorageConfigurationException if the configuration couldn't be loaded
+	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
 	public static ConfigurationLoader New(
 		final Path    path   ,
@@ -155,7 +176,7 @@ public interface ConfigurationLoader
 	 * 
 	 * @param file file path
 	 * @return the configuration
-	 * @throws StorageConfigurationException if the configuration couldn't be loaded
+	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
 	public static ConfigurationLoader New(
 		final File file
@@ -173,7 +194,7 @@ public interface ConfigurationLoader
 	 * @param file file path
 	 * @param charset the charset used to load the configuration
 	 * @return the configuration
-	 * @throws StorageConfigurationException if the configuration couldn't be loaded
+	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
 	public static ConfigurationLoader New(
 		final File    file   ,
@@ -191,7 +212,7 @@ public interface ConfigurationLoader
 	 * 
 	 * @param url URL path
 	 * @return the configuration
-	 * @throws StorageConfigurationException if the configuration couldn't be loaded
+	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
 	public static ConfigurationLoader New(
 		final URL url
@@ -209,7 +230,7 @@ public interface ConfigurationLoader
 	 * @param url URL path
 	 * @param charset the charset used to load the configuration
 	 * @return the configuration
-	 * @throws StorageConfigurationException if the configuration couldn't be loaded
+	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
 	public static ConfigurationLoader New(
 		final URL     url    ,
@@ -227,7 +248,7 @@ public interface ConfigurationLoader
 	 * 
 	 * @param inputStream the stream to read from
 	 * @return the configuration
-	 * @throws StorageConfigurationException if the configuration couldn't be loaded
+	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
 	public static ConfigurationLoader New(
 		final InputStream inputStream
@@ -245,7 +266,7 @@ public interface ConfigurationLoader
 	 * @param inputStream the stream to read from
 	 * @param charset the charset used to load the configuration
 	 * @return the configuration
-	 * @throws StorageConfigurationException if the configuration couldn't be loaded
+	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
 	public static ConfigurationLoader New(
 		final InputStream inputStream,

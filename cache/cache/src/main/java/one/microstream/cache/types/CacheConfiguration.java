@@ -1,6 +1,26 @@
 
 package one.microstream.cache.types;
 
+/*-
+ * #%L
+ * microstream-cache
+ * %%
+ * Copyright (C) 2019 - 2021 MicroStream Software
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
 import static one.microstream.X.coalesce;
 import static one.microstream.X.notNull;
 import static one.microstream.chars.XChars.notEmpty;
@@ -78,6 +98,8 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 
 	/**
 	 * @deprecated replaced by {@link #load()}, will be removed in a future release
+	 * 
+	 * @return the loaded configuration or <code>null</code> if none was found
 	 */
 	@Deprecated
 	public static CacheConfiguration<?, ?> Load()
@@ -110,6 +132,9 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param charset the charset used to load the configuration
+	 * @return the loaded configuration or <code>null</code> if none was found
+	 * 
 	 * @deprecated replaced by {@link #load(Charset)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -179,6 +204,12 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the loaded configuration or <code>null</code> if none was found
+	 * 
 	 * @deprecated replaced by {@link #load(Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -207,8 +238,10 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	 * @see #PathProperty()
 	 * @see #DefaultResourceName()
 	 *
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @return the loaded configuration or <code>null</code> if none was found
 	 */
 	public static <K, V> CacheConfiguration<K, V> load(
@@ -224,6 +257,13 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param charset the charset used to load the configuration
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the loaded configuration or <code>null</code> if none was found
+	 * 
 	 * @deprecated replaced by {@link #load(Charset,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -253,9 +293,11 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	 * @see #PathProperty()
 	 * @see #DefaultResourceName()
 	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param charset the charset used to load the configuration
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @return the loaded configuration or <code>null</code> if none was found
 	 */
 	public static <K, V> CacheConfiguration<K, V> load(
@@ -299,6 +341,9 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param path a classpath resource, a file path or an URL
+	 * @return the configuration or <code>null</code> if none was found
+	 * 
 	 * @deprecated replaced by {@link #load(String)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -333,6 +378,10 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param path a classpath resource, a file path or an URL
+	 * @param charset the charset used to load the configuration
+	 * @return the configuration or <code>null</code> if none was found
+	 * 
 	 * @deprecated replaced by {@link #load(String,Charset)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -371,6 +420,13 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param path a classpath resource, a file path or an URL
+	 * @param keyType the class of the key type
+	 * @param valueType the class of the value type
+	 * @return the configuration or <code>null</code> if none was found
+	 * 
 	 * @deprecated replaced by {@link #load(String,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -393,9 +449,11 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	 * <li>As a file</li>
 	 * </ul>
 	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param path a classpath resource, a file path or an URL
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class of the key type
+	 * @param valueType the class of the value type
 	 * @return the configuration or <code>null</code> if none was found
 	 */
 	public static <K, V> CacheConfiguration<K, V> load(
@@ -413,6 +471,14 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param path a classpath resource, a file path or an URL
+	 * @param charset the charset used to load the configuration
+	 * @param keyType the class of the key type
+	 * @param valueType the class of the value type
+	 * @return the configuration or <code>null</code> if none was found
+	 * 
 	 * @deprecated replaced by {@link #load(String,Charset,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -436,10 +502,12 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	 * <li>As a file</li>
 	 * </ul>
 	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param path a classpath resource, a file path or an URL
 	 * @param charset the charset used to load the configuration
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class of the key type
+	 * @param valueType the class of the value type
 	 * @return the configuration or <code>null</code> if none was found
 	 */
 	public static <K, V> CacheConfiguration<K, V> load(
@@ -476,6 +544,9 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param path file system path
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(Path)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -504,6 +575,10 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param path file system path
+	 * @param charset the charset used to load the configuration
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(Path,Charset)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -536,6 +611,9 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param file file path
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(File)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -564,6 +642,10 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param file file path
+	 * @param charset the charset used to load the configuration
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(File,Charset)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -596,6 +678,9 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param url URL path
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(URL)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -624,6 +709,10 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param url URL path
+	 * @param charset the charset used to load the configuration
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(URL,Charset)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -656,6 +745,9 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param inputStream the stream to read from
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(InputStream)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -684,6 +776,10 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param inputStream the stream to read from
+	 * @param charset the charset used to load the configuration
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(InputStream,Charset)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -716,6 +812,13 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param path file system path
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(Path,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -731,9 +834,11 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	/**
 	 * Tries to load the configuration from <code>path</code>.
 	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param path file system path
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @return the configuration
 	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
@@ -752,6 +857,14 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param path file system path
+	 * @param charset the charset used to load the configuration
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(Path,Charset,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -768,10 +881,12 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	/**
 	 * Tries to load the configuration from <code>path</code>.
 	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param path file system path
 	 * @param charset the charset used to load the configuration
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @return the configuration
 	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
@@ -790,6 +905,13 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param file file path
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(File,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -804,10 +926,12 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 
 	/**
 	 * Tries to load the configuration from the file <code>file</code>.
-	 *
+	 * 
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param file file path
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @return the configuration
 	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
@@ -826,6 +950,14 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param file file path
+	 * @param charset the charset used to load the configuration
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(File,Charset,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -841,11 +973,13 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 
 	/**
 	 * Tries to load the configuration from the file <code>file</code>.
-	 *
+	 * 
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param file file path
 	 * @param charset the charset used to load the configuration
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @return the configuration
 	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
@@ -864,6 +998,13 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param url URL path
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(URL,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -878,10 +1019,12 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 
 	/**
 	 * Tries to load the configuration from the URL <code>url</code>.
-	 *
+	 * 
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param url URL path
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @return the configuration
 	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
@@ -900,6 +1043,14 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param url URL path
+	 * @param charset the charset used to load the configuration
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(URL,Charset,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -915,11 +1066,13 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 
 	/**
 	 * Tries to load the configuration from the URL <code>url</code>.
-	 *
+	 * 
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param url URL path
 	 * @param charset the charset used to load the configuration
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @return the configuration
 	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
@@ -938,6 +1091,13 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param inputStream the stream to read from
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(InputStream,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -953,9 +1113,11 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	/**
 	 * Tries to load the configuration from the {@link InputStream} <code>inputStream</code>.
 	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param inputStream the stream to read from
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @return the configuration
 	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
@@ -974,6 +1136,14 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param inputStream the stream to read from
+	 * @param charset the charset used to load the configuration
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the configuration
+	 * 
 	 * @deprecated replaced by {@link #load(InputStream,Charset,Class,Class)}, will be removed in a future release
 	 */
 	@Deprecated
@@ -989,11 +1159,13 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 
 	/**
 	 * Tries to load the configuration from the {@link InputStream} <code>inputStream</code>.
-	 *
+	 * 
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param inputStream the stream to read from
 	 * @param charset the charset used to load the configuration
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @return the configuration
 	 * @throws ConfigurationException if the configuration couldn't be loaded
 	 */
@@ -1031,8 +1203,11 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	/**
 	 * Creates a new {@link Builder} for a {@link CacheConfiguration}.
 	 *
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
+	 * @return the newly created builder
 	 */
 	public static <K, V> Builder<K, V> Builder(
 		final Class<K> keyType  ,
@@ -1046,11 +1221,14 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	 * Creates a new {@link Builder} for a {@link CacheConfiguration}, which uses
 	 * the <code>storageManager</code> as a backing store.
 	 *
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @param cacheName the slot name for the data in the {@link EmbeddedStorageManager}'s root,
 	 * 	usually the {@link Cache}'s name
 	 * @param storageManager the {@link EmbeddedStorageManager} to use as a backing store
+	 * @return the newly created builder
 	 */
 	public static <K, V> Builder<K, V> Builder(
 		final Class<K>               keyType       ,
@@ -1072,11 +1250,14 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	 * Creates a new {@link Builder} for a {@link CacheConfiguration}, which uses
 	 * the <code>storageManager</code> as a backing store.
 	 *
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @param uri prefix of the slot name for the data in the {@link EmbeddedStorageManager}'s root
 	 * @param cacheName suffix of slot name for the data in the {@link EmbeddedStorageManager}'s root
 	 * @param storageManager the {@link EmbeddedStorageManager} to use as a backing store
+	 * @return the newly created builder
 	 */
 	public static <K, V> Builder<K, V> Builder(
 		final Class<K> keyType,
@@ -1105,6 +1286,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	 * the generic MicroStream <code>configuration</code>'s values.
 	 *
 	 * @param configuration the {@link Configuration} to take the initial values from
+	 * @return the newly created builder
 	 */
 	public static Builder<?, ?> Builder(
 		final Configuration configuration
@@ -1119,9 +1301,12 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	 * Creates a new {@link Builder} for a {@link CacheConfiguration}, which uses
 	 * the generic MicroStream <code>configuration</code>'s values.
 	 *
-	 * @param keyType the key type
-	 * @param valueType the value type
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param keyType the class for the key type
+	 * @param valueType the class for value type
 	 * @param configuration the {@link Configuration} to take the initial values from
+	 * @return the newly created builder
 	 */
 	public static <K, V> Builder<K, V> Builder(
 		final Class<K>      keyType      ,
@@ -1144,6 +1329,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 *
 		 * @param listenerConfiguration the
 		 *  {@link CacheEntryListenerConfiguration}
+		 * @return this
 		 */
 		public Builder<K, V> addListenerConfiguration(CacheEntryListenerConfiguration<K, V> listenerConfiguration);
 
@@ -1151,6 +1337,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	     * Set the {@link CacheLoader} {@link Factory}.
 	     *
 	     * @param cacheLoaderFactory the {@link CacheLoader} {@link Factory}
+		 * @return this
 	     */
 		public Builder<K, V> cacheLoaderFactory(Factory<CacheLoader<K, V>> cacheLoaderFactory);
 
@@ -1158,6 +1345,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	     * Set the {@link CacheWriter} {@link Factory}.
 	     *
 	     * @param cacheWriterFactory the {@link CacheWriter} {@link Factory}
+		 * @return this
 	     */
 		public Builder<K, V> cacheWriterFactory(Factory<CacheWriter<? super K, ? super V>> cacheWriterFactory);
 
@@ -1170,6 +1358,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 *
 		 * @param expiryPolicyFactory
 		 *            the {@link ExpiryPolicy} {@link Factory}
+		 * @return this
 		 *
 		 * @see CacheConfiguration#DefaultExpiryPolicyFactory()
 		 */
@@ -1183,6 +1372,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 * before cache construction will be the one used.
 	     *
 	     * @param evictionManagerFactory the {@link EvictionManager} {@link Factory}
+		 * @return this
 	     *
 	     * @see CacheConfiguration#DefaultEvictionManagerFactory()
 	     */
@@ -1193,6 +1383,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 * <p>
 		 * It is an invalid configuration to use this without specifying a
 		 * {@link CacheLoader} {@link Factory}.
+		 * @return this
 		 */
 		public default Builder<K, V> readThrough()
 		{
@@ -1207,6 +1398,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 *
 		 * @param readThrough
 		 *            <code>true</code> if read-through is required
+		 * @return this
 		 */
 		public Builder<K, V> readThrough(boolean readThrough);
 
@@ -1215,6 +1407,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 * <p>
 		 * It is an invalid configuration to use this without specifying a
 		 * {@link CacheWriter} {@link Factory}.
+		 * @return this
 		 */
 		public default Builder<K, V> writeThrough()
 		{
@@ -1229,11 +1422,13 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 *
 		 * @param writeThrough
 		 *            <code>true</code> if write-through is required
+		 * @return this
 		 */
 		public Builder<K, V> writeThrough(boolean writeThrough);
 
 		/**
 		 * Set that store-by-value semantics should be used.
+		 * @return this
 		 */
 		public default Builder<K, V> storeByValue()
 		{
@@ -1242,6 +1437,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 
 		/**
 		 * Set that store-by-reference semantics should be used.
+		 * @return this
 		 */
 		public default Builder<K, V> storeByReference()
 		{
@@ -1255,6 +1451,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 * @param storeByValue
 		 *            <code>true</code> if store-by-value is required,
 		 *            <code>false</code> for store-by-reference
+		 * @return this
 		 */
 		public Builder<K, V> storeByValue(boolean storeByValue);
 
@@ -1264,6 +1461,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 * Statistics may be enabled or disabled at runtime via
 		 * {@link CacheManager#enableStatistics(String, boolean)} or
 		 * {@link Cache#setStatisticsEnabled(boolean)}.
+		 * @return this
 		 */
 		public default Builder<K, V> enableStatistics()
 		{
@@ -1276,6 +1474,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 * Statistics may be enabled or disabled at runtime via
 		 * {@link CacheManager#enableStatistics(String, boolean)} or
 		 * {@link Cache#setStatisticsEnabled(boolean)}.
+		 * @return this
 		 */
 		public default Builder<K, V> disableStatistics()
 		{
@@ -1291,6 +1490,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 *
 		 * @param statisticsEnabled
 		 *            true to enable statistics, false to disable.
+		 * @return this
 		 */
 		public Builder<K, V> enableStatistics(final boolean statisticsEnabled);
 
@@ -1300,6 +1500,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 * Management may be enabled or disabled at runtime via
 		 * {@link CacheManager#enableManagement(String, boolean)} or
 		 * {@link Cache#setManagementEnabled(boolean)}.
+		 * @return this
 		 */
 		public default Builder<K, V> enableManagement()
 		{
@@ -1312,6 +1513,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 * Management may be enabled or disabled at runtime via
 		 * {@link CacheManager#enableManagement(String, boolean)} or
 		 * {@link Cache#setManagementEnabled(boolean)}.
+		 * @return this
 		 */
 		public default Builder<K, V> disableManagement()
 		{
@@ -1327,6 +1529,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 *
 		 * @param managementEnabled
 		 *            true to enable statistics, false to disable.
+		 * @return this
 		 */
 		public Builder<K, V> enableManagement(final boolean managementEnabled);
 
@@ -1338,6 +1541,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 		 * before cache construction will be the one used.
 	     *
 	     * @param serializerFieldPredicate the Serializer {@link Field} {@link Predicate}
+		 * @return this
 	     *
 	     * @see CacheConfiguration#DefaultSerializerFieldPredicate()
 	     */
@@ -1345,6 +1549,8 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 
 		/**
 		 * Builds a {@link CacheConfiguration} based on the values of this {@link Builder}.
+		 * 
+		 * @return the created configuration
 		 */
 		public CacheConfiguration<K, V> build();
 
@@ -1489,7 +1695,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
-	 * Returns the default {@link ExpiryPolicy} {@link Factory}, which is eternal.
+	 * @return the default {@link ExpiryPolicy} {@link Factory}, which is eternal.
 	 */
 	public static Factory<ExpiryPolicy> DefaultExpiryPolicyFactory()
 	{
@@ -1497,7 +1703,9 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
-	 * Returns the default {@link EvictionManager} {@link Factory}, which doesn't evict at all.
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return the default {@link EvictionManager} {@link Factory}, which doesn't evict at all.
 	 */
 	public static <K, V> Factory<EvictionManager<K, V>> DefaultEvictionManagerFactory()
 	{
@@ -1505,7 +1713,7 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 	}
 
 	/**
-	 * Returns the default Serializer {@link Field} {@link Predicate}, which excludes transient fields.
+	 * @return the default Serializer {@link Field} {@link Predicate}, which excludes transient fields.
 	 */
 	public static Predicate<? super Field> DefaultSerializerFieldPredicate()
 	{
@@ -1514,6 +1722,11 @@ public interface CacheConfiguration<K, V> extends CompleteConfiguration<K, V>
 
 	/**
 	 * Creates a new {@link CacheConfiguration} based on a {@link javax.cache.configuration.Configuration}.
+	 * 
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param other the configuration to take the values from
+	 * @return the newly created configuration
 	 */
 	public static <K, V> CacheConfiguration<K, V> New(final javax.cache.configuration.Configuration<K, V> other)
 	{

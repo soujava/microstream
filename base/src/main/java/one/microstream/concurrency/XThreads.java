@@ -1,5 +1,25 @@
 package one.microstream.concurrency;
 
+/*-
+ * #%L
+ * microstream-base
+ * %%
+ * Copyright (C) 2019 - 2021 MicroStream Software
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,8 +50,9 @@ public final class XThreads
 	 * for complex applications, it can be a conveniently simple, working way to make concurrency-wise
 	 * simple applications sufficiently concurrency-safe.
 	 * 
-	 * @param <T>
-	 * @param logic
+	 * @param <T> the return value type
+	 * @param logic the logic to execute
+	 * @return the supplier's value
 	 */
 	public static <T> T executeSynchronized(final Supplier<T> logic)
 	{
@@ -42,7 +63,9 @@ public final class XThreads
 	}
 	
 	/**
-	 * @see #executeSynchronized(Runnable)
+	 * @param logic the logic to execute
+	 * 
+	 * @see #executeSynchronized(Supplier)
 	 */
 	public static void executeSynchronized(final Runnable logic)
 	{
@@ -322,7 +345,7 @@ public final class XThreads
 	/**
 	 * Dummy constructor to prevent instantiation of this static-only utility class.
 	 * 
-	 * @throws UnsupportedOperationException
+	 * @throws UnsupportedOperationException when called
 	 */
 	private XThreads()
 	{

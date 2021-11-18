@@ -1,5 +1,25 @@
 package one.microstream.persistence.binary.types;
 
+/*-
+ * #%L
+ * microstream-persistence-binary
+ * %%
+ * Copyright (C) 2019 - 2021 MicroStream Software
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
 import static one.microstream.X.ConstList;
 import static one.microstream.X.mayNull;
 import static one.microstream.X.notNull;
@@ -291,11 +311,6 @@ public abstract class Binary implements Chunk
 	
 	/**
 	 * "Raw" means without byte order transformation. This must be done in the calling context.
-	 * 
-	 * @param entityAddress
-	 * @param entityTotalLength
-	 * @param entityTypeId
-	 * @param entityObjectId
 	 * 
 	 */
 	static final void setEntityHeaderRawValuesToAddress(
@@ -2058,6 +2073,11 @@ public abstract class Binary implements Chunk
 		
 	/**
 	 * Updates the passed array up to the size defined by the binary data, returns the size.
+	 * 
+	 * @param binaryOffset the offset of the array size in the binary data
+	 * @param handler the persistence load handler
+	 * @param array the array to update
+	 * @return the array size
 	 */
 	public final int updateSizedArrayObjectReferences(
 		final long                   binaryOffset,
@@ -2527,6 +2547,9 @@ public abstract class Binary implements Chunk
 	 * Similar problems with other or complex custom handlers are conceivable.
 	 *<p>
 	 * Only one helper object can be registered per subject instance (the instance to be built).
+	 * 
+	 * @param key the object to register the helper for
+	 * @param helper the helper to register
 	 */
 	public final synchronized void registerHelper(final Object key, final Object helper)
 	{
@@ -2551,6 +2574,9 @@ public abstract class Binary implements Chunk
 	 * their elements in an additional helper structure and defer the actual elements collecting to the completion.
 	 * <p>
 	 * Similar problems with other or complex custom handlers are conceivable.
+	 * 
+	 * @param key the object to get the helper for
+	 * @return the registered helper, or <code>null</code> if none is registered for the key object
 	 */
 	public final synchronized Object getHelper(final Object key)
 	{

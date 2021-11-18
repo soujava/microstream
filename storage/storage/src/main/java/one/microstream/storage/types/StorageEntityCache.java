@@ -1,5 +1,25 @@
 package one.microstream.storage.types;
 
+/*-
+ * #%L
+ * microstream-storage
+ * %%
+ * Copyright (C) 2019 - 2021 MicroStream Software
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
 import static one.microstream.X.notNull;
 import static one.microstream.math.XMath.log2pow2;
 import static one.microstream.math.XMath.notNegative;
@@ -54,12 +74,11 @@ public interface StorageEntityCache<E extends StorageEntity> extends StorageChan
 		// constants //
 		//////////////
 		
-		// (11.02.2021 FH)XXX:  re-deactivate before release
 		// (24.11.2017 TM)TODO: there seems to still be a GC race condition bug, albeit only very rarely.
-		private static boolean debugGcEnabled = false;
+		private static boolean experimentalGcEnabled = false;
 		
 		/**
-		 * <b><u>/!\</u></b> Storage-level garbage collection is an unfinished feature with a still tiny race condition problem
+		 * <b><u>/!\ EXPERIMENTAL /!\</u></b> Storage-level garbage collection is an unfinished feature with a still tiny race condition problem
 		 * that can cause the database to be ruined occasionally.
 		 * <p>
 		 * <b>Enable at your own risk!</b>
@@ -68,12 +87,14 @@ public interface StorageEntityCache<E extends StorageEntity> extends StorageChan
 		 * and can disappear at any release.<br>
 		 * <b>Do not use this is production mode.</b>
 		 * 
-		 * @param enabled
+		 * @param enabled <code>true</code> if the gc should be enabled, <code>false</code> otherwise
+		 * 
+		 * @deprecated experimental, will be removed in a future release
 		 */
 		@Deprecated
-		public static void DEBUG_setGarbageCollectionEnabled(final boolean enabled)
+		public static void setGarbageCollectionEnabled(final boolean enabled)
 		{
-			debugGcEnabled = enabled;
+			experimentalGcEnabled = enabled;
 		}
 		
 		
@@ -700,8 +721,6 @@ public interface StorageEntityCache<E extends StorageEntity> extends StorageChan
 		 * If the entity has no reference, it can be marked black right away. This either anticipates/replaces the black marking
 		 * by the GC and should actually not be necessary, however as the effort to do it at this point is rather minimal, it's done
 		 * nonetheless.
-		 *
-		 * @param entry
 		 */
 		private void markEntityForChangedData(final StorageEntity.Default entry)
 		{
@@ -879,8 +898,6 @@ public interface StorageEntityCache<E extends StorageEntity> extends StorageChan
 		/**
 		 * Returns {@code true} if there are no more oids to mark and {@code false} if time ran out.
 		 * (Meaning the returned boolean effectively means "Was there enough time?")
-		 *
-		 * @param nanoTimeBudgetBound
 		 */
 		private boolean incrementalMark(final long nanoTimeBudgetBound)
 		{
@@ -1331,7 +1348,7 @@ public interface StorageEntityCache<E extends StorageEntity> extends StorageChan
 			final StorageChannel channel
 		)
 		{
-			if(!debugGcEnabled)
+			if(!experimentalGcEnabled)
 			{
 				return true;
 			}
@@ -1416,7 +1433,7 @@ public interface StorageEntityCache<E extends StorageEntity> extends StorageChan
 			final StorageChannel channel
 		)
 		{
-			if(!debugGcEnabled)
+			if(!experimentalGcEnabled)
 			{
 				return true;
 			}

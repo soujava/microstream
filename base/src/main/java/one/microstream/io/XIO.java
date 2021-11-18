@@ -1,5 +1,25 @@
 package one.microstream.io;
 
+/*-
+ * #%L
+ * microstream-base
+ * %%
+ * Copyright (C) 2019 - 2021 MicroStream Software
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
 import static java.nio.file.StandardOpenOption.READ;
 import static java.nio.file.StandardOpenOption.WRITE;
 
@@ -462,11 +482,11 @@ public final class XIO
 	 * <p>
 	 * Also see: https://stackoverflow.com/questions/48311252/a-bit-strange-behaviour-of-files-delete-and-files-deleteifexists
 	 * 
-	 * @param <C>
-	 * @param directory
-	 * @param logic
-	 * @return
-	 * @throws IOException
+	 * @param <C> the consumer type
+	 * @param directory the directory to iterate
+	 * @param logic the itaration logic
+	 * @return the given logic
+	 * @throws IOException if an IO error occurs
 	 */
 	public static <C extends Consumer<? super Path>> C iterateEntries(
 		final Path directory,
@@ -482,12 +502,12 @@ public final class XIO
 	 * <p>
 	 * Also see: https://stackoverflow.com/questions/48311252/a-bit-strange-behaviour-of-files-delete-and-files-deleteifexists
 	 * 
-	 * @param <C>
-	 * @param directory
-	 * @param logic
-	 * @param selector
-	 * @return
-	 * @throws IOException
+	 * @param <C> the consumer type
+	 * @param directory the directory to iterate
+	 * @param logic the itaration logic
+	 * @param selector filter predicate
+	 * @return the given logic
+	 * @throws IOException if an IO error occurs
 	 */
 	public static <C extends Consumer<? super Path>> C iterateEntries(
 		final Path                    directory,
@@ -653,9 +673,9 @@ public final class XIO
 	 * So when already using a convenience method, anyway, why not make it really convienent and accept file path
 	 * strings right away?
 	 * 
-	 * @param filePath
-	 * @return
-	 * @throws IOException
+	 * @param filePath the source file path
+	 * @return the contents of the file
+	 * @throws IOException if an IO error occurs
 	 */
 	public static String readString(final String filePath)
 		throws IOException
@@ -671,10 +691,10 @@ public final class XIO
 	 * So when already using a convenience method, anyway, why not make it really convienent and accept file path
 	 * strings right away?
 	 * 
-	 * @param filePath
-	 * @param charSet
-	 * @return
-	 * @throws IOException
+	 * @param filePath the source file path
+	 * @param charSet the charset to use
+	 * @return the contents of the file
+	 * @throws IOException if an IO error occurs
 	 */
 	public static String readString(final String filePath, final Charset charSet)
 		throws IOException
@@ -753,12 +773,33 @@ public final class XIO
 		);
 	}
 		
+	/**
+	 * Writes the contents of the string to the file.
+	 * <p>
+	 * <b>Attention:</b> Internally this method opens a new FileChannel to operate on!
+	 * 
+	 * @param file the file to write to
+	 * @param string the string to write
+	 * @return number of actual written bytes
+	 * @throws IOException if an IO error occurs
+	 */
 	public static final long write(final Path file, final String string)
 		throws IOException
 	{
 		return write(file, string, XChars.standardCharset());
 	}
 	
+	/**
+	 * Writes the contents of the string to the file.
+	 * <p>
+	 * <b>Attention:</b> Internally this method opens a new FileChannel to operate on!
+	 * 
+	 * @param file the file to write to
+	 * @param string the string to write
+	 * @param charset the charset which is used to decode the string
+	 * @return number of actual written bytes
+	 * @throws IOException if an IO error occurs
+	 */
 	public static final long write(final Path file, final String string, final Charset charset)
 		throws IOException
 	{
@@ -767,6 +808,16 @@ public final class XIO
 		return write(file, bytes);
 	}
 	
+	/**
+	 * Writes the contents of the array to the file.
+	 * <p>
+	 * <b>Attention:</b> Internally this method opens a new FileChannel to operate on!
+	 * 
+	 * @param file the file to write to
+	 * @param bytes the bytes to write
+	 * @return number of actual written bytes
+	 * @throws IOException if an IO error occurs
+	 */
 	public static final long write(final Path file, final byte[] bytes)
 		throws IOException
 	{
@@ -777,6 +828,16 @@ public final class XIO
 		return writeCount;
 	}
 	
+	/**
+	 * Writes the contents of the buffer to the file.
+	 * <p>
+	 * <b>Attention:</b> Internally this method opens a new FileChannel to operate on!
+	 * 
+	 * @param file the file to write to
+	 * @param buffer the buffer to write
+	 * @return number of actual written bytes
+	 * @throws IOException if an IO error occurs
+	 */
 	public static long write(final Path file, final ByteBuffer buffer)
 		throws IOException
 	{
@@ -785,6 +846,15 @@ public final class XIO
 		);
 	}
 	
+	/**
+	 * Truncates the file to the given size
+	 * <p>
+	 * <b>Attention:</b> Internally this method opens a new FileChannel to operate on!
+	 *
+	 * @param file file to be truncated
+	 * @param newSize new Size, must be zero or greater
+	 * @throws IOException if an IO error occurs
+	 */
 	public static void truncate(final Path file, final long newSize)
 		throws IOException
 	{
@@ -969,9 +1039,10 @@ public final class XIO
 	 * The reason for this behavior is unknown, but looking at countless other issues in the JDK code,
 	 * one might guess... .
 	 * 
-	 * @param fileChannel
-	 * @param byteBuffers
-	 * @throws IOException
+	 * @param fileChannel the target file channel
+	 * @param byteBuffers the source data buffers
+	 * @return the number of written bytes
+	 * @throws IOException if an IO error occurs
 	 */
 	public static long appendAll(final FileChannel fileChannel, final ByteBuffer[] byteBuffers)
 		throws IOException
@@ -1003,9 +1074,10 @@ public final class XIO
 	 * In short: this method "guarantees" that every byte contained in the passed {@link ByteBuffer}s was appended
 	 * to the passed {@link FileChannel} and actually reached the physical file.
 	 * 
-	 * @param fileChannel
-	 * @param byteBuffers
-	 * @throws IOException
+	 * @param fileChannel the target file channel
+	 * @param byteBuffers the source data buffers
+	 * @return the number of written bytes
+	 * @throws IOException if an IO error occurs
 	 */
 	public static long appendAllGuaranteed(final FileChannel fileChannel, final ByteBuffer[] byteBuffers)
 		throws IOException
@@ -1055,10 +1127,11 @@ public final class XIO
 	)
 		throws IOException
 	{
-		long writeCount = 0;
-		while(buffer.hasRemaining())
+		final long writeCount = writeToChannel(fileChannel, buffer);
+		
+		if(writeCount > 0)
 		{
-			writeCount += fileChannel.write(buffer);
+			flush(fileChannel);
 		}
 		
 		return writeCount;
@@ -1074,10 +1147,53 @@ public final class XIO
 		
 		for(final ByteBuffer buffer : buffers)
 		{
-			writeCount += write(fileChannel, buffer);
+			writeCount += writeToChannel(fileChannel, buffer);
+		}
+		
+		if(writeCount > 0)
+		{
+			flush(fileChannel);
 		}
 		
 		return writeCount;
+	}
+
+	public static void truncate(
+		final FileChannel fileChannel,
+		final long        newSize
+	)
+		throws IOException
+	{
+		fileChannel.truncate(newSize);
+		flush(fileChannel);
+	}
+	
+	private static long writeToChannel(
+		final FileChannel fileChannel,
+		final ByteBuffer  buffer
+	)
+		throws IOException
+	{
+		long writeCount = 0;
+		while(buffer.hasRemaining())
+		{
+			writeCount += fileChannel.write(buffer);
+		}
+		
+		return writeCount;
+	}
+	
+	private static void flush(final FileChannel fileChannel)
+		throws IOException
+	{
+		/*
+		 * (01.07.2021 FH)NOTE:
+		 * Ensures data is written to target medium.
+		 * Journaling (transaction log) only works reliable if the bytes are actually written to the underlying medium.
+		 * force() is needed to flush, because close() may not be called in case the process gets killed
+		 * by the system without a proper shutdown.
+		 */
+		fileChannel.force(true);
 	}
 	
 	public static final <T> T performClosingOperation(
@@ -1177,7 +1293,7 @@ public final class XIO
 		if(effectiveLength == 0L)
 		{
 			/*
-			 * (28.09.2020 FH)XXX priv#383, nothing to read, abort.
+			 * no-op
 			 */
 			return 0L;
 		}
@@ -1228,7 +1344,7 @@ public final class XIO
 	 * 
 	 * @return the number of bytes written by {@link FileChannel#transferFrom(java.nio.channels.ReadableByteChannel, long, long)}.
 	 * 
-	 * @throws IOException
+	 * @throws IOException if an IO error occurs
 	 * 
 	 * @see #ensureFile(Path)
 	 * @see #ensureDirectoryAndFile(Path)
@@ -1268,7 +1384,7 @@ public final class XIO
 	 * @throws IOException as specified by {@link FileChannel#transferFrom(java.nio.channels.ReadableByteChannel, long, long)}
 	 * 
 	 * @see FileChannel#transferFrom(java.nio.channels.ReadableByteChannel, long, long)
-	 * @see #copyFile(Path, Path)
+	 * @see #copyFile(Path, Path, OpenOption...)
 	 */
 	public static long copyFile(
 		final FileChannel sourceChannel,
@@ -1281,11 +1397,11 @@ public final class XIO
 	
 	/**
 	 * Uses the sourceChannel's current position!
-	 * @param sourceChannel
-	 * @param targetChannel
-	 * @param targetPosition
-	 * @return
-	 * @throws IOException
+	 * @param sourceChannel an open and readable channel to the source file whose content shall be copied.
+	 * @param targetChannel an open and writeable channel to the target file that shall receive the copied content.
+	 * @param targetPosition the position to write to in the target channel
+	 * @return the number of written bytes
+	 * @throws IOException as specified by {@link FileChannel#transferFrom(java.nio.channels.ReadableByteChannel, long, long)}
 	 */
 	public static long copyFile(
 		final FileChannel sourceChannel ,
@@ -1535,11 +1651,11 @@ public final class XIO
 		 * <p>
 		 * Also see: https://stackoverflow.com/questions/48311252/a-bit-strange-behaviour-of-files-delete-and-files-deleteifexists
 		 * 
-		 * @param <C>
-		 * @param directory
-		 * @param logic
-		 * @return
-		 * @throws IORuntimeException
+		 * @param <C> the consumer type
+		 * @param directory the source directory
+		 * @param logic the itaration logic
+		 * @return the given logic
+		 * @throws IORuntimeException when an IO error occurs
 		 */
 		public static <C extends Consumer<? super Path>> C iterateEntries(
 			final Path directory,
@@ -1562,12 +1678,12 @@ public final class XIO
 		 * <p>
 		 * Also see: https://stackoverflow.com/questions/48311252/a-bit-strange-behaviour-of-files-delete-and-files-deleteifexists
 		 * 
-		 * @param <C>
-		 * @param directory
-		 * @param logic
-		 * @param selector
-		 * @return
-		 * @throws IORuntimeException
+		 * @param <C> the consumer type
+		 * @param directory the source directory
+		 * @param logic the itaration logic
+		 * @param selector filter predicate
+		 * @return the given logic
+		 * @throws IORuntimeException when an IO error occurs
 		 */
 		public static <C extends Consumer<? super Path>> C iterateEntries(
 			final Path                    directory,
@@ -1680,7 +1796,7 @@ public final class XIO
 		/**
 		 * Dummy constructor to prevent instantiation of this static-only utility class.
 		 * 
-		 * @throws UnsupportedOperationException
+		 * @throws UnsupportedOperationException when called
 		 */
 		private unchecked()
 		{
@@ -1699,7 +1815,7 @@ public final class XIO
 	/**
 	 * Dummy constructor to prevent instantiation of this static-only utility class.
 	 * 
-	 * @throws UnsupportedOperationException
+	 * @throws UnsupportedOperationException when called
 	 */
 	private XIO()
 	{

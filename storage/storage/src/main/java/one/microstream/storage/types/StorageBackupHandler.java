@@ -1,5 +1,25 @@
 package one.microstream.storage.types;
 
+/*-
+ * #%L
+ * microstream-storage
+ * %%
+ * Copyright (C) 2019 - 2021 MicroStream Software
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
 import static one.microstream.X.notNull;
 
 import one.microstream.X;
@@ -13,6 +33,7 @@ import one.microstream.storage.exceptions.StorageExceptionBackupEmptyStorageBack
 import one.microstream.storage.exceptions.StorageExceptionBackupEmptyStorageForNonEmptyBackup;
 import one.microstream.storage.exceptions.StorageExceptionBackupInconsistentFileLength;
 import one.microstream.storage.types.StorageBackupHandler.Default.ChannelInventory;
+import one.microstream.storage.types.StorageDataFileValidator.Creator;
 
 public interface StorageBackupHandler extends Runnable, StorageActivePart
 {
@@ -59,12 +80,12 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 	
 	
 	public static StorageBackupHandler New(
-		final StorageBackupSetup         backupSetup        ,
-		final int                        channelCount       ,
-		final StorageBackupItemQueue     itemQueue          ,
-		final StorageOperationController operationController,
-		final StorageWriteController     writeController    ,
-		final StorageDataFileValidator   validator
+		final StorageBackupSetup               backupSetup        ,
+		final int                              channelCount       ,
+		final StorageBackupItemQueue           itemQueue          ,
+		final StorageOperationController       operationController,
+		final StorageWriteController           writeController    ,
+		final StorageDataFileValidator.Creator validatorCreator
 	)
 	{
 		final StorageBackupFileProvider backupFileProvider = backupSetup.backupFileProvider();
@@ -80,7 +101,7 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 			notNull(itemQueue)          ,
 			notNull(operationController),
 			notNull(writeController)    ,
-			notNull(validator)
+			notNull(validatorCreator)
 		);
 	}
 	
@@ -90,15 +111,16 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 		// instance fields //
 		////////////////////
 		
-		private final StorageBackupSetup         backupSetup        ;
-		private final ChannelInventory[]         channelInventories ;
-		private final StorageBackupItemQueue     itemQueue          ;
-		private final StorageOperationController operationController;
-		private final StorageWriteController     writeController    ;
-		private final StorageDataFileValidator   validator          ;
+		private final StorageBackupSetup               backupSetup        ;
+		private final ChannelInventory[]               channelInventories ;
+		private final StorageBackupItemQueue           itemQueue          ;
+		private final StorageOperationController       operationController;
+		private final StorageWriteController           writeController    ;
+		private final StorageDataFileValidator.Creator validatorCreator   ;
 		
 		private boolean running; // being "ordered" to run.
 		private boolean active ; // being actually active, e.g. executing the last loop before running check.
+		private boolean shutdown;// being "ordered" to stop the backup handler after completing current queued items
 		
 		
 		
@@ -107,12 +129,12 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 		/////////////////
 		
 		Default(
-			final ChannelInventory[]         channelInventories ,
-			final StorageBackupSetup         backupSetup        ,
-			final StorageBackupItemQueue     itemQueue          ,
-			final StorageOperationController operationController,
-			final StorageWriteController     writeController    ,
-			final StorageDataFileValidator   validator
+			final ChannelInventory[]               channelInventories ,
+			final StorageBackupSetup               backupSetup        ,
+			final StorageBackupItemQueue           itemQueue          ,
+			final StorageOperationController       operationController,
+			final StorageWriteController           writeController    ,
+			final StorageDataFileValidator.Creator validatorCreator
 		)
 		{
 			super();
@@ -121,7 +143,7 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 			this.itemQueue           = itemQueue          ;
 			this.operationController = operationController;
 			this.writeController     = writeController    ;
-			this.validator           = validator          ;
+			this.validatorCreator    = validatorCreator   ;
 		}
 
 		
@@ -139,13 +161,24 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 		@Override
 		public final synchronized boolean isRunning()
 		{
-			return this.running;
+			return this.running && !(this.shutdown && this.itemQueue.isEmpty());
 		}
 		
 		@Override
 		public final synchronized boolean isActive()
 		{
 			return this.active;
+		}
+		
+		/**
+		 * Initiate a controlled shutdown of the StorageBackupHandler
+		 * after processing all currently enqueued items.
+		 */
+		@Override
+		public synchronized StorageBackupHandler stop()
+		{
+			this.shutdown = true;
+			return this;
 		}
 		
 		@Override
@@ -209,10 +242,7 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 				{
 					try
 					{
-						if(!this.itemQueue.processNextItem(this, 10_000))
-						{
-							this.validator.freeMemory();
-						}
+						this.itemQueue.processNextItem(this, 10_000);
 					}
 					catch(final InterruptedException e)
 					{
@@ -340,6 +370,24 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 				// the last/latest/highest existing backup file can validly diverge in length.
 				if(backupTargetFile.number() == lastBackupFileNumber)
 				{
+					if(storageFileLength > backupTargetFileLength)
+					{
+						// missing length is copied to update the backup file only if the amount of bytes is greater then zero
+						this.copyFilePart(
+							dataFile,
+							backupTargetFileLength,
+							storageFileLength - backupTargetFileLength,
+							backupTargetFile
+						);
+					}
+					
+					//if the backup target is larger we don't need to correct it here. It will be truncated later on.
+					continue;
+				}
+				
+				//a 0-Byte sized backup file can be updated
+				if(backupTargetFile.number() > lastBackupFileNumber && backupTargetFileLength == 0)
+				{					
 					// missing length is copied to update the backup file
 					this.copyFilePart(
 						dataFile,
@@ -389,6 +437,8 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 					backupTransactionFile.moveTo(wf);
 				});
 			}
+			//remove deleted file from inventory
+			backupInventory.transactionFile = null;
 		}
 		
 		
@@ -423,7 +473,8 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 			{
 				// on any mismatch, the backup transaction file is deleted (potentially moved&renamed) and rebuilt.
 				this.deleteBackupTransactionFile(backupInventory);
-				this.copyFile(liveTransactionsFile, backupTransactionFile);
+				final StorageBackupTransactionsFile backupTransactionFileNew = liveTransactionsFile.ensureBackupFile(this);
+				this.copyFile(liveTransactionsFile, backupTransactionFileNew);
 			}
 		}
 				
@@ -453,7 +504,8 @@ public interface StorageBackupHandler extends Runnable, StorageActivePart
 					// (16.06.2020 TM)TODO: nasty instanceof
 					if(backupTargetFile instanceof StorageBackupDataFile)
 					{
-						this.validator.validateFile((StorageBackupDataFile)backupTargetFile, oldBackupFileLength, length);
+						this.validatorCreator.createDataFileValidator()					
+							.validateFile((StorageBackupDataFile)backupTargetFile, oldBackupFileLength, length);
 					}
 				}
 				catch(final Exception e)

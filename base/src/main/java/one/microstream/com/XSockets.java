@@ -1,5 +1,25 @@
 package one.microstream.com;
 
+/*-
+ * #%L
+ * microstream-base
+ * %%
+ * Copyright (C) 2019 - 2021 MicroStream Software
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
 import static one.microstream.X.notNull;
 
 import java.io.IOException;
@@ -88,7 +108,7 @@ public final class XSockets
 	 * Creates a new {@link InetSocketAddress} instance with {@link #localHostAddress()} and port 0 (ephemeral port).
 	 * 
 	 * @return a localhost {@link InetSocketAddress}.
-	 * @throws ComException
+	 * @throws ComException if a communication error occurs
 	 * 
 	 * @see InetSocketAddress#InetSocketAddress(InetAddress, int)
 	 */
@@ -102,7 +122,7 @@ public final class XSockets
 	 * 
 	 * @param port the port to be used.
 	 * @return a localhost {@link InetSocketAddress} with the passed port value.
-	 * @throws ComException
+	 * @throws ComException if a communication error occurs
 	 * 
 	 * @see InetSocketAddress#InetSocketAddress(InetAddress, int)
 	 */
@@ -141,10 +161,10 @@ public final class XSockets
 	 * This method either writes all of the passed {@link ByteBuffer}'s bytes from position to limit
 	 * or it throws an exception to indicate failure.
 	 * 
-	 * @param socketChannel
-	 * @param byteBuffer
-	 * 
+	 * @param socketChannel the target channel
+	 * @param byteBuffer the source buffer
 	 * @return the passed {@link ByteBuffer} instance.
+	 * @throws ComException if a communication error occurs
 	 */
 	public static ByteBuffer writeCompletely(final SocketChannel socketChannel, final ByteBuffer byteBuffer)
 		throws ComException
@@ -173,10 +193,10 @@ public final class XSockets
 	 * This method either read to completely fill the passed {@link ByteBuffer} from position to limit
 	 * or it throws an exception to indicate failure.
 	 * 
-	 * @param socketChannel
-	 * @param byteBuffer
-	 * 
+	 * @param socketChannel the source channel
+	 * @param byteBuffer the target buffer
 	 * @return the passed {@link ByteBuffer} instance.
+	 * @throws ComException if a communication error occurs
 	 */
 	public static ByteBuffer readCompletely(final SocketChannel socketChannel, final ByteBuffer byteBuffer)
 		throws ComException
@@ -365,7 +385,7 @@ public final class XSockets
 	/**
 	 * Dummy constructor to prevent instantiation of this static-only utility class.
 	 * 
-	 * @throws UnsupportedOperationException
+	 * @throws UnsupportedOperationException when called
 	 */
 	private XSockets()
 	{

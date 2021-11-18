@@ -1,5 +1,25 @@
 package one.microstream.math;
 
+/*-
+ * #%L
+ * microstream-base
+ * %%
+ * Copyright (C) 2019 - 2021 MicroStream Software
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
 import java.awt.Point;
 
 public class Bresenham
@@ -11,12 +31,13 @@ public class Bresenham
 	 * Examples:<br>
 	 * (0,0) to (2,0) = 2 steps<br>
 	 * (0,0) to (2,2) = 2 steps<br>
-	 * (5,18) to (10,9) = 9 steps<br>
+	 * (5,18) to (10,9) = 9 steps
 	 *
-	 * @param x1
-	 * @param y1
-	 * @param x2
-	 * @param y2
+	 * @param x1 the x coordinate of the first point
+	 * @param y1 the y coordinate of the first point
+	 * @param x2 the x coordinate of the second point
+	 * @param y2 the y coordinate of the second point
+	 * @return the amount of discrete steps between the two points
 	 */
 	public static final int stepCountDistance(final int x1, final int y1, final int x2, final int y2)
 	{
@@ -270,7 +291,7 @@ public class Bresenham
 	/**
 	 * Dummy constructor to prevent instantiation of this static-only utility class.
 	 * 
-	 * @throws UnsupportedOperationException
+	 * @throws UnsupportedOperationException when called
 	 */
 	private Bresenham()
 	{

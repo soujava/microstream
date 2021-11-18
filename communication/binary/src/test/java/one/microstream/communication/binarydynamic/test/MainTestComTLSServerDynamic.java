@@ -1,6 +1,7 @@
 package one.microstream.communication.binarydynamic.test;
 
 import java.nio.ByteOrder;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import one.microstream.communication.binarydynamic.ComBinaryDynamic;
@@ -16,6 +17,8 @@ public class MainTestComTLSServerDynamic
 {
 	public static void main(final String[] args)
 	{
+		Path serverKeyStore = Paths.get(args[0]);
+		Path serverTrustStore = Paths.get(args[1]);
 		
 		final String largeString = createLargeString(10_000);
 		XDebug.println("starting host...");
@@ -24,11 +27,11 @@ public class MainTestComTLSServerDynamic
 			.setHostByteOrder(ByteOrder.BIG_ENDIAN)
 			.setConnectionHandler(ComTLSConnectionHandler.New(
 					new TLSKeyManagerProvider.PKCS12(
-						Paths.get("C:/Users/HaraldGrunwald/DevTSL/v2/server_key_store.pks"),
-						new char[] {'m','i','c','r','o','s','t','r','e','a','m'}),
+						serverKeyStore,
+						args[2].toCharArray()),
 					new TLSTrustManagerProvider.PKCS12(
-						Paths.get("C:/Users/HaraldGrunwald/DevTSL/v2/server_trust_store.pks"),
-						new char[] {'m','i','c','r','o','s','t','r','e','a','m'}),
+						serverTrustStore,
+						args[2].toCharArray()),
 					new TLSParametersProvider.Default(),
 					new SecureRandomProvider.Default()
 				))

@@ -1,5 +1,6 @@
 package one.microstream.communication.binarydynamic.test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 
@@ -16,16 +17,18 @@ import one.microstream.meta.XDebug;
 public class MainTestComTLSClientDynamic
 {
 	public static void main(final String[] args)
-	{
-		
+	{		
+		Path clientKeyStore = Paths.get(args[0]);
+		Path clientTrustStore = Paths.get(args[1]);
+				
 		final ComClient<?> client = ComBinaryDynamic.Foundation()
 			.setConnectionHandler(ComTLSConnectionHandler.New(
 				new TLSKeyManagerProvider.PKCS12(
-					Paths.get("C:/Users/HaraldGrunwald/DevTSL/v2/client_key_store.pks"),
-					new char[] {'m','i','c','r','o','s','t','r','e','a','m'}),
+					clientKeyStore,
+					args[2].toCharArray()),
 				new TLSTrustManagerProvider.PKCS12(
-					Paths.get("C:/Users/HaraldGrunwald/DevTSL/v2/client_trust_store.pks"),
-					new char[] {'m','i','c','r','o','s','t','r','e','a','m'}),
+					clientTrustStore,
+					args[2].toCharArray()),
 				new TLSParametersProvider.Default(),
 				new SecureRandomProvider.Default()
 			))

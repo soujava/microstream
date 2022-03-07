@@ -245,7 +245,9 @@ public interface Lazy<T> extends Referencing<T>
 			super();
 			this.subject  = subject ;
 			this.objectId = objectId;
-			this.loader   = loader  ;
+			
+			// setter must be used to funnel every assignment through the acceptor logic.
+			this.$setLoader(loader);
 			this.touch();
 		}
 
@@ -379,7 +381,7 @@ public interface Lazy<T> extends Referencing<T>
 			{
 				return;
 			}
-			this.loader = loader;
+			this.loader = Static.acceptLoader(loader, this);
 		}
 
 
@@ -948,4 +950,72 @@ public interface Lazy<T> extends Referencing<T>
 		
 	}
 
+	
+	/* (07.03.2022 TM)NOTE:
+	 * "Installing" is hereby defined as the process of receiving a functional instance (e.g. via a setter),
+	 * then applying some logic to it, from doing nothing to checking up to even replacing/wrapping it by
+	 * another functional instance of compatible type and THEN assigning it to an internal field.
+	 * This is usefull, for example, to add a logging aspect to a logic instance.
+	 */
+	
+	public static ObjectSwizzling acceptLoader(final ObjectSwizzling loader, final Lazy<?> lazy)
+	{
+		
+	}
+	
+	public static LoaderAcceptor setLoaderAcceptor(final LoaderAcceptor loaderAcceptor)
+	{
+		synchronized(Lazy.Static.class)
+		{
+			final LoaderAcceptor oldAcceptor = Lazy.Static.loaderAcceptor;
+			
+			Lazy.Static.loaderAcceptor = loaderAcceptor;
+			
+			return oldAcceptor;
+		}
+	}
+	
+	public static LoaderAcceptor getLoaderAcceptor()
+	{
+		synchronized(Lazy.Static.class)
+		{
+			return Lazy.Static.loaderAcceptor;
+		}
+	}
+	
+	static class Static
+	{
+		static LoaderAcceptor loaderAcceptor;
+		
+		static LoaderAcceptor setLoaderAcceptor(final LoaderAcceptor loaderAcceptor)
+		{
+			final LoaderAcceptor oldAcceptor = Lazy.Static.loaderAcceptor;
+			
+			Lazy.Static.loaderAcceptor = loaderAcceptor;
+			
+			return oldAcceptor;
+		}
+		
+		static LoaderAcceptor getLoaderAcceptor()
+		{
+			return Lazy.Static.loaderAcceptor;
+		}
+		
+		static ObjectSwizzling acceptLoader(final ObjectSwizzling loader, final Lazy<?> lazy)
+		{
+			if(loaderAcceptor == null)
+			{
+				// no-op
+				return loader;
+			}
+			
+			return loaderAcceptor.acceptLoader(loader, lazy);
+		}
+	}
+	
+	public interface LoaderAcceptor
+	{
+		public ObjectSwizzling acceptLoader(ObjectSwizzling loader, Lazy<?> lazy);
+	}
+	
 }

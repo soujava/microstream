@@ -960,27 +960,17 @@ public interface Lazy<T> extends Referencing<T>
 	
 	public static ObjectSwizzling acceptLoader(final ObjectSwizzling loader, final Lazy<?> lazy)
 	{
-		
+		return Lazy.Static.acceptLoader(loader, lazy);
 	}
 	
 	public static LoaderAcceptor setLoaderAcceptor(final LoaderAcceptor loaderAcceptor)
 	{
-		synchronized(Lazy.Static.class)
-		{
-			final LoaderAcceptor oldAcceptor = Lazy.Static.loaderAcceptor;
-			
-			Lazy.Static.loaderAcceptor = loaderAcceptor;
-			
-			return oldAcceptor;
-		}
+		return Lazy.Static.setLoaderAcceptor(loaderAcceptor);
 	}
 	
 	public static LoaderAcceptor getLoaderAcceptor()
 	{
-		synchronized(Lazy.Static.class)
-		{
-			return Lazy.Static.loaderAcceptor;
-		}
+		return Lazy.Static.getLoaderAcceptor();
 	}
 	
 	static class Static

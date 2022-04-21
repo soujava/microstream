@@ -289,7 +289,7 @@ public interface TypedSerializer<M> extends Serializer<M>
 		
 		private ByteBuffer[] updateTypeInfo()
 		{
-			if(this.typeInfoStrategy.hasUpdate())
+			if(this.typeInfoStrategy.hasUpdate() || this.typeInfoCache == null)
 			{
 				this.storer.store(this.typeInfoStrategy.get());
 				this.storer.commit();

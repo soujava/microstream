@@ -2282,7 +2282,7 @@ extends ByteOrderTargeting.Mutable<F>,
 
 		protected SerializerTypeInfoStrategyCreator ensureSerializerTypeInfoStrategyCreator()
 		{
-			return new SerializerTypeInfoStrategyCreator.TypeDictionary(true);
+			return new SerializerTypeInfoStrategyCreator.TypeDictionary(false);
 		}
 
 

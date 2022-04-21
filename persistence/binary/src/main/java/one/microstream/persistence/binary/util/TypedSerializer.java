@@ -314,7 +314,7 @@ public interface TypedSerializer<M> extends Serializer<M>
 			
 			if(typeInfoCount > 0 && this.lastTypeInfoImportTimeStamp < typeInfoTimeStamp)
 			{
-				logger.debug("updating type informations");
+				logger.debug("importing type informations from input");
 				
 				this.input = ChunksWrapper.New(Arrays.copyOfRange(in.buffers(), 1, typeInfoCount + 1));
 				final SerializerTypeInfo typeInfo = (SerializerTypeInfo)this.persistenceManager.get();

@@ -48,11 +48,15 @@ import one.microstream.persistence.types.Storer;
 import one.microstream.util.logging.Logging;
 
 /**
- * Convenient API layer to use the binary persistence functionality for a simple serializer.
+ * Convenient API layer to use the binary persistence functionality for a serializer
+ * that includes type informations in the serialized data.
  * <p>
  * It is based on a {@link SerializerFoundation}, which can be configured to various needs.
  * <p>
  * Per default {@link Binary} and <code>byte[]</code> are supported as medium types.
+ * 
+ * The included type information can be configured by suppling a {@link SerializerTypeInfoStrategy}
+ * using a {@link SerializerTypeInfoStrategyCreator} to the {@link SerializerFoundation}.
  *
  * @param <M> the medium type
  */

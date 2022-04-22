@@ -32,6 +32,11 @@ import one.microstream.persistence.types.PersistenceTypeHandlerEnsurer;
 import one.microstream.persistence.types.PersistenceTypeHandlerManager;
 import one.microstream.util.logging.Logging;
 
+/**
+ * Import {@link PersistenceTypeDefinition} into the supplied
+ * {@link PersistenceTypeHandlerManager}
+ *
+ */
 public interface TypeDefinitionImporter
 {
 	public void importTypeDefinition(PersistenceTypeDefinition typeDefintion);
@@ -74,9 +79,6 @@ public interface TypeDefinitionImporter
 		{
 			if(typeDefintion.type() != null)
 			{
-//				final PersistenceTypeHandler<Binary, ?> typeHandler = this.ensureTypeHandler(typeDefintion);
-//				this.ensureLegacyTypeHandler(typeDefintion, typeHandler);
-				
 				final PersistenceTypeHandler<Binary, ?> handler = this.typeHandlerManager.lookupTypeHandler(typeDefintion.type());
 				
 				if(handler != null)

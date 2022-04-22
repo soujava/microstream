@@ -32,10 +32,15 @@ import one.microstream.persistence.types.PersistenceTypeDescription;
 import one.microstream.persistence.types.PersistenceTypeDescriptionMember;
 import one.microstream.persistence.types.PersistenceTypeDescriptionResolver;
 import one.microstream.persistence.types.PersistenceTypeDescriptionResolverProvider;
+import one.microstream.persistence.types.PersistenceTypeDictionaryAssembler;
 import one.microstream.persistence.types.PersistenceTypeDictionaryBuilder;
 import one.microstream.persistence.types.PersistenceTypeDictionaryEntry;
 import one.microstream.persistence.types.PersistenceTypeDictionaryParser;
 
+/**
+ * Create PersistenceTypeDefinitions from type Strings created by the
+ * {@link PersistenceTypeDictionaryAssembler}
+ */
 public interface TypeDefinitionBuilder
 {
 	public XGettingSequence<PersistenceTypeDefinition> buildTypeDefinitions(final String typeEntry);
